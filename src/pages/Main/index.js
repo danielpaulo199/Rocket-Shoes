@@ -1,23 +1,9 @@
 import React from 'react';
 
-import { Container, Content } from './styles';
-import Logo from '../../assets/logo.png';
+//import { Container } from './styles';
 
 function Main() {
-  return (
-    <Container>
-      <Content>
-        <img src={Logo} alt="FastFeet Logo" />
-        <form>
-          <span>SEU E-MAIL</span>
-          <input type="text"></input>
-          <span>SUA SENHA</span>
-          <input type="password"></input>
-          <button type="submit">Entrar no Sistema</button>
-        </form>
-      </Content>
-    </Container>
-  );
+  return <h1>óla main page</h1>;
 }
 
 export default Main;
