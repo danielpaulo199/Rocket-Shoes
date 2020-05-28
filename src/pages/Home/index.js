@@ -1,115 +1,66 @@
-import React from 'react';
+import React, { Component } from 'react';
+import api from '../../services/api';
+import { connect } from 'react-redux';
+
+import { formatPrice } from '../../util/format';
 
 import { ProductList } from './styles';
 
 import { MdAddShoppingCart } from 'react-icons/md';
 
-function Home() {
-  return (
-    <ProductList>
-      <li>
-        <img
-          src="https://d26lpennugtm8s.cloudfront.net/stores/948/491/products/adidas-yeezy-boost-350-v2-core-black-red-by9612-original-offbr121-2f23f97a225109338215684957227086-480-0.jpg"
-          alt="Yezzy 350 v2"
-        />
-        <strong>Adidas Yeezy 350 v2</strong>
-        <span>R$980,99</span>
+class Home extends Component {
+  state = {
+    products: [],
+  };
 
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
+  async componentDidMount() {
+    const response = await api.get('products');
+    console.log(response);
 
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
+    const data = response.data.map((product) => ({
+      ...product,
+      priceFormatted: formatPrice(product.price),
+    }));
 
-      <li>
-        <img
-          src="https://d26lpennugtm8s.cloudfront.net/stores/948/491/products/adidas-yeezy-boost-350-v2-core-black-red-by9612-original-offbr121-2f23f97a225109338215684957227086-480-0.jpg"
-          alt="Yezzy 350 v2"
-        />
-        <strong>Adidas Yeezy 350 v2</strong>
-        <span>R$980,99</span>
+    this.setState({ products: data });
+  }
 
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
+  handleAddProduct = (product) => {
+    const { dispatch } = this.props;
 
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
+    dispatch({
+      type: 'ADD_TO_CART',
+      product,
+    });
+  };
 
-      <li>
-        <img
-          src="https://d26lpennugtm8s.cloudfront.net/stores/948/491/products/adidas-yeezy-boost-350-v2-core-black-red-by9612-original-offbr121-2f23f97a225109338215684957227086-480-0.jpg"
-          alt="Yezzy 350 v2"
-        />
-        <strong>Adidas Yeezy 350 v2</strong>
-        <span>R$980,99</span>
+  render() {
+    const { products } = this.state;
 
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
+    return (
+      <ProductList>
+        {products.map((product) => (
+          <li key={product.id}>
+            <img src={product.image} alt={product.title} />
+            <strong>{product.title}</strong>
+            <span>{product.priceFormatted}</span>
 
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
+            <button
+              type="button"
+              onClick={() => this.handleAddProduct(product)}
+            >
+              <div>
+                <MdAddShoppingCart size={16} color="#fff" /> 3
+              </div>
 
-      <li>
-        <img
-          src="https://d26lpennugtm8s.cloudfront.net/stores/948/491/products/adidas-yeezy-boost-350-v2-core-black-red-by9612-original-offbr121-2f23f97a225109338215684957227086-480-0.jpg"
-          alt="Yezzy 350 v2"
-        />
-        <strong>Adidas Yeezy 350 v2</strong>
-        <span>R$980,99</span>
-
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
-
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-
-      <li>
-        <img
-          src="https://d26lpennugtm8s.cloudfront.net/stores/948/491/products/adidas-yeezy-boost-350-v2-core-black-red-by9612-original-offbr121-2f23f97a225109338215684957227086-480-0.jpg"
-          alt="Yezzy 350 v2"
-        />
-        <strong>Adidas Yeezy 350 v2</strong>
-        <span>R$980,99</span>
-
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
-
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-
-      <li>
-        <img
-          src="https://d26lpennugtm8s.cloudfront.net/stores/948/491/products/adidas-yeezy-boost-350-v2-core-black-red-by9612-original-offbr121-2f23f97a225109338215684957227086-480-0.jpg"
-          alt="Yezzy 350 v2"
-        />
-        <strong>Adidas Yeezy 350 v2</strong>
-        <span>R$980,99</span>
-
-        <button type="button">
-          <div>
-            <MdAddShoppingCart size={16} color="#fff" /> 3
-          </div>
-
-          <span>ADICIONAR AO CARRINHO</span>
-        </button>
-      </li>
-    </ProductList>
-  );
+              <span>ADICIONAR AO CARRINHO</span>
+            </button>
+          </li>
+        ))}
+        ;
+      </ProductList>
+    );
+  }
 }
 
-export default Home;
+export default connect()(Home);
